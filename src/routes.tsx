@@ -1,4 +1,6 @@
-import SamplePage from './pages/SamplePage';
+import Home from './pages/Home';
+import Quiz from './pages/Quiz';
+import Recommendation from './pages/Recommendation';
 import type { ReactNode } from 'react';
 
 interface RouteConfig {
@@ -10,9 +12,19 @@ interface RouteConfig {
 
 const routes: RouteConfig[] = [
   {
-    name: 'Sample Page',
+    name: 'Home',
     path: '/',
-    element: <SamplePage />
+    element: <Home />
+  },
+  {
+    name: 'Quiz',
+    path: '/quiz',
+    element: <Quiz />
+  },
+  {
+    name: 'Recommendation',
+    path: '/recommendation',
+    element: <Recommendation />
   }
 ];
 
