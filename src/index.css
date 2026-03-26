@@ -9,39 +9,41 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --radius: 1.5rem;
-    --background: 45 40% 97%;
-    --foreground: 30 15% 20%;
-    --card: 0 0% 100%;
+    --radius: 0.75rem;
+    --background: 45 25% 97%; /* 米白色背景 - 极简 */
+    --foreground: 30 15% 20%; /* 深暖灰色文字 */
+    --card: 45 30% 100%;
     --card-foreground: 30 15% 20%;
-    --popover: 0 0% 100%;
+    --popover: 45 30% 100%;
     --popover-foreground: 30 15% 20%;
-    --primary: 45 85% 65%;
-    --primary-foreground: 30 15% 20%;
-    --secondary: 200 70% 70%;
+    --primary: 35 20% 35%; /* 中性暖棕 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 15% 85%;
     --secondary-foreground: 30 15% 20%;
-    --muted: 45 30% 92%;
+    --muted: 45 20% 94%;
     --muted-foreground: 30 10% 45%;
-    --accent: 340 75% 75%;
-    --accent-foreground: 30 15% 20%;
+    --accent: 35 25% 40%;
+    --accent-foreground: 0 0% 100%;
+    --gold: 45 80% 60%; /* 金色点缀 */
+    --gold-light: 45 75% 85%;
     --destructive: 0 70% 65%;
     --destructive-foreground: 0 0% 100%;
-    --border: 45 25% 88%;
-    --input: 45 25% 88%;
-    --ring: 45 85% 65%;
-    --chart-1: 45 85% 65%;
+    --border: 35 10% 88%;
+    --input: 35 10% 88%;
+    --ring: 35 20% 35%;
+    --chart-1: 30 40% 45%;
     --chart-2: 200 70% 70%;
     --chart-3: 340 75% 75%;
     --chart-4: 280 60% 70%;
     --chart-5: 120 50% 65%;
-    --sidebar-background: 45 40% 97%;
+    --sidebar-background: 45 25% 97%;
     --sidebar-foreground: 30 15% 20%;
-    --sidebar-primary: 45 85% 65%;
-    --sidebar-primary-foreground: 30 15% 20%;
-    --sidebar-accent: 45 30% 92%;
+    --sidebar-primary: 35 20% 35%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 45 20% 94%;
     --sidebar-accent-foreground: 30 15% 20%;
-    --sidebar-border: 45 25% 88%;
-    --sidebar-ring: 45 85% 65%;
+    --sidebar-border: 35 10% 88%;
+    --sidebar-ring: 35 20% 35%;
   }
 
   .dark {
@@ -91,45 +93,133 @@ All colors MUST be HSL.
 }
 
 @layer utilities {
-  .hand-drawn-border {
+  /* 极简手绘边框 - 粗轮廓 */
+  .minimal-hand-drawn {
     position: relative;
+    border: 4px solid hsl(var(--foreground));
+    border-radius: 2px;
+    background: transparent;
+    /* 不规则手绘感 */
+    border-top-left-radius: 6px 3px;
+    border-top-right-radius: 4px 5px;
+    border-bottom-left-radius: 5px 4px;
+    border-bottom-right-radius: 3px 6px;
   }
-  
-  .hand-drawn-border::before {
+
+  /* 金色线框装饰 */
+  .gold-acent-border {
+    position: relative;
+    border: 2px solid hsl(var(--gold));
+    border-radius: 2px;
+  }
+
+  .gold-accent-border::before {
     content: '';
     position: absolute;
-    inset: -2px;
-    border-radius: inherit;
-    padding: 2px;
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)), hsl(var(--accent)));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0.3;
+    inset: -4px;
+    border: 1px solid hsl(var(--gold) / 0.4);
+    border-radius: 3px;
+    pointer-events: none;
+    transform: rotate(-0.5deg);
   }
 
-  .star-decoration {
+  /* 极简手绘按钮 */
+  .btn-minimal {
     position: relative;
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+    border: 4px solid hsl(var(--foreground));
+    border-radius: 2px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    box-shadow: 4px 4px 0 hsl(var(--foreground) / 0.12);
+    transition: all 0.2s ease;
+    /* 不规则轮廓 */
+    border-top-left-radius: 5px 3px;
+    border-top-right-radius: 3px 4px;
+    border-bottom-left-radius: 4px 3px;
+    border-bottom-right-radius: 3px 5px;
   }
 
-  .star-decoration::after {
-    content: '✦';
-    position: absolute;
-    font-size: 1.5rem;
-    opacity: 0.2;
-    animation: twinkle 3s ease-in-out infinite;
+  .btn-minimal:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 hsl(var(--foreground) / 0.15);
   }
 
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.2; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.1); }
+  .btn-minimal:active {
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0 hsl(var(--foreground) / 0.08);
   }
 
-  .gradient-text {
-    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+  /* 极简输入框 */
+  .input-minimal {
+    border: 3px solid hsl(var(--border));
+    border-radius: 2px;
+    background: hsl(var(--card));
+    transition: all 0.2s ease;
+    /* 微妙的不规则 */
+    border-top-left-radius: 4px 2px;
+    border-top-right-radius: 2px 3px;
+    border-bottom-left-radius: 3px 2px;
+    border-bottom-right-radius: 2px 4px;
+  }
+
+  .input-minimal:focus-within {
+    border-color: hsl(var(--foreground));
+    box-shadow: 3px 3px 0 hsl(var(--foreground) / 0.08);
+  }
+
+  /* 金色装饰线 */
+  .gold-line {
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      hsl(var(--gold)) 20%,
+      hsl(var(--gold)) 80%,
+      transparent 100%
+    );
+  }
+
+  /* 金色点状装饰 */
+  .gold-dots::before,
+  .gold-dots::after {
+    content: '◆';
+    color: hsl(var(--gold));
+    font-size: 0.5rem;
+    margin: 0 1rem;
+  }
+
+  /* 极简涂鸦装饰 - 抽象线条 */
+  .abstract-doodle {
+    opacity: 0.08;
+    stroke: hsl(var(--foreground));
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+
+  /* 金色涂鸦装饰 */
+  .gold-doodle {
+    opacity: 0.25;
+    stroke: hsl(var(--gold));
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+
+  /* 极简标签文字 */
+  .label-minimal {
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* 标题极简样式 */
+  .heading-minimal {
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: hsl(var(--foreground));
   }
 }

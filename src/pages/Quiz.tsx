@@ -2,13 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '@/contexts/QuizContext';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ArrowRight, BrainCircuit } from 'lucide-react';
+import { ChevronLeft, ArrowRight } from 'lucide-react';
 import { questions, calculateMatch } from '@/lib/pet-logic';
 
 const Quiz: React.FC = () => {
@@ -29,7 +26,6 @@ const Quiz: React.FC = () => {
     if (currentIdx < questions.length - 1) {
       setCurrentIdx(currentIdx + 1);
     } else {
-      // 结束测试
       setAnswers(userAnswers);
       const recommendations = calculateMatch(data.zodiac, userAnswers);
       setRecommendations(recommendations);
@@ -50,100 +46,93 @@ const Quiz: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 flex flex-col pt-10 relative overflow-hidden">
-      {/* 装饰性背景 */}
-      <div className="absolute top-5 right-10 text-4xl opacity-10 animate-pulse">✦</div>
-      <div className="absolute bottom-10 left-10 text-3xl opacity-10 animate-pulse delay-100">★</div>
-      
-      <div className="w-full max-w-md mx-auto space-y-8 relative z-10">
-        <div className="flex items-center justify-between mb-6">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={handlePrev} 
+    <div className="min-h-screen bg-background p-6 flex flex-col">
+      {/* 极简顶部导航 - 大量留白 */}
+      <div className="w-full max-w-md mx-auto space-y-8 pt-8">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={handlePrev}
             disabled={currentIdx === 0}
-            className="rounded-full w-12 h-12 hover:bg-primary/10 disabled:opacity-30"
+            className="p-2 rounded-lg border-2 border-border hover:border-primary transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
-            <ChevronLeft className="w-7 h-7" strokeWidth={2.5} />
-          </Button>
-          <div className="flex flex-col items-center">
-            <h2 className="text-2xl font-black gradient-text">性格测试</h2>
-            <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1">
-              <span className="text-primary font-bold">第 {currentIdx + 1} 题</span>
-              <span>/</span>
-              <span>共 {questions.length} 题</span>
+            <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
+          </button>
+
+          <div className="text-center space-y-1">
+            <p className="text-sm font-medium text-foreground/60">
+              第 {currentIdx + 1} 题 / 共 {questions.length} 题
             </p>
           </div>
-          <div className="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-secondary/30 to-accent/30 rounded-full border-3 border-secondary/50">
-            <BrainCircuit className="w-6 h-6 text-secondary" strokeWidth={2.5} />
-          </div>
+
+          <div className="w-9" />
         </div>
 
-        <Progress value={progress} className="h-3 rounded-full shadow-inner" />
+        {/* 极简进度条 */}
+        <div className="progress-hand-drawn">
+          <div
+            className="progress-hand-drawn-bar"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentIdx}
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -50, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="border-4 border-primary/20 shadow-2xl bg-card/80 backdrop-blur-sm overflow-hidden rounded-[2rem]">
-              <CardHeader className="bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 pb-10">
-                <CardTitle className="text-2xl font-bold leading-relaxed text-center">
-                  {currentQuestion.text}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-10 px-6 pb-8">
-                <RadioGroup 
-                  value={userAnswers[currentIdx] || ''} 
-                  onValueChange={handleSelect}
-                  className="space-y-5"
-                >
-                  {currentQuestion.options.map((option) => (
-                    <div 
-                      key={option.value}
-                      className={`flex items-center space-x-4 p-5 rounded-[1.5rem] border-3 transition-all cursor-pointer relative overflow-hidden ${
-                        userAnswers[currentIdx] === option.value 
-                          ? 'border-primary bg-gradient-to-r from-primary/20 via-secondary/10 to-accent/10 shadow-lg scale-[1.02]' 
-                          : 'border-border bg-white hover:border-primary/50 hover:shadow-md'
-                      }`}
-                      onClick={() => handleSelect(option.value)}
-                    >
-                      <RadioGroupItem value={option.value} id={`q${currentIdx}-opt-${option.value}`} className="sr-only" />
-                      <div className={`w-6 h-6 rounded-full border-3 flex items-center justify-center transition-all ${
-                        userAnswers[currentIdx] === option.value 
-                          ? 'border-primary bg-primary' 
-                          : 'border-muted-foreground/30'
+      {/* 问题区域 - 手绘风格 */}
+      <div className="flex-1 flex items-center justify-center py-12">
+        <div className="w-full max-w-md">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIdx}
+              initial={{ x: 50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -50, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-8"
+            >
+              {/* 问题文本 - 极简呈现 */}
+              <h2 className="text-2xl font-semibold text-center leading-relaxed">
+                {currentQuestion.text}
+              </h2>
+
+              {/* 选项 - 手绘风格 */}
+              <div className="space-y-4">
+                {currentQuestion.options.map((option) => (
+                  <div
+                    key={option.value}
+                    onClick={() => handleSelect(option.value)}
+                    className={`option-hand-drawn p-5 ${
+                      userAnswers[currentIdx] === option.value ? 'selected' : ''
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                        userAnswers[currentIdx] === option.value
+                          ? 'border-primary bg-primary'
+                          : 'border-muted-foreground/40'
                       }`}>
                         {userAnswers[currentIdx] === option.value && (
-                          <div className="w-3 h-3 rounded-full bg-white" />
+                          <div className="w-2.5 h-2.5 rounded-full bg-white" />
                         )}
                       </div>
-                      <Label 
-                        htmlFor={`q${currentIdx}-opt-${option.value}`}
-                        className="text-lg font-medium flex-1 cursor-pointer"
-                      >
+                      <span className="text-base font-medium flex-1">
                         {option.label}
-                      </Label>
-                      {userAnswers[currentIdx] === option.value && (
-                        <span className="text-2xl">✦</span>
-                      )}
+                      </span>
                     </div>
-                  ))}
-                </RadioGroup>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </AnimatePresence>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
 
-        <Button 
-          onClick={handleNext} 
-          className="w-full h-16 text-xl font-black rounded-[1.5rem] transition-all group shadow-lg bg-gradient-to-r from-primary via-secondary to-primary hover:shadow-xl"
+      {/* 底部按钮 - 手绘风格 */}
+      <div className="w-full max-w-md mx-auto pb-8">
+        <Button
+          onClick={handleNext}
+          className="btn-hand-drawn w-full h-14 text-base"
         >
           {currentIdx === questions.length - 1 ? '查看我的萌宠' : '下一题'}
-          <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" strokeWidth={2.5} />
+          <ArrowRight className="ml-2 w-5 h-5" strokeWidth={2} />
         </Button>
       </div>
     </div>
