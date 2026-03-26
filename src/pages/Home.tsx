@@ -37,11 +37,21 @@ const Home: React.FC = () => {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="flex flex-col items-center space-y-3 mb-6"
         >
-          <div className="relative">
+          <motion.div
+            animate={{
+              rotate: [0, 360]
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            className="relative"
+          >
             <img
               src="/images/logo.png"
               alt="星宠缘 Logo"
-              className="w-44 h-44 object-contain"
+              className="w-64 h-64 object-contain"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 target.style.display = 'none';
@@ -50,10 +60,10 @@ const Home: React.FC = () => {
               }}
             />
             {/* 占位符 */}
-            <div className="w-44 h-44 items-center justify-center text-5xl" style={{ display: 'none' }}>
+            <div className="w-64 h-64 items-center justify-center text-5xl" style={{ display: 'none' }}>
               🐾
             </div>
-          </div>
+          </motion.div>
           <div className="text-center space-y-1">
             <h1 className="heading-minimal text-2xl tracking-tight">
               星宠缘

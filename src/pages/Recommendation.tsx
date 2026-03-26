@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuiz } from '@/contexts/QuizContext';
-import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
-import { Heart, X, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
+import { MinimalBackground } from '@/components/ui/minimal-doodles';
 
 const Recommendation: React.FC = () => {
   const { data, addLikedPet, reset } = useQuiz();
@@ -55,15 +54,17 @@ const Recommendation: React.FC = () => {
 
   if (showResult) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-8">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative">
+        <MinimalBackground />
+
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="w-full max-w-md text-center space-y-10"
+          className="w-full max-w-md text-center space-y-8 relative z-10"
         >
-          <div className="space-y-3">
-            <h2 className="text-3xl font-semibold">你的萌宠伙伴</h2>
-            <p className="text-foreground/60">
+          <div className="space-y-4">
+            <h2 className="heading-minimal text-3xl tracking-tight">你的萌宠伙伴</h2>
+            <p className="text-foreground/60 text-sm">
               {data.likedPets.length === pets.length
                 ? "你是萌宠全能爱好者！"
                 : data.likedPets.length > 0
@@ -72,46 +73,50 @@ const Recommendation: React.FC = () => {
             </p>
           </div>
 
-          {/* 心动列表 - 手绘风格 */}
-          <div className="flex flex-wrap justify-center gap-3">
+          {/* 心动列表 - 极简手绘风格 */}
+          <div className="flex flex-wrap justify-center gap-4">
             {data.likedPets.length > 0 ? (
               data.likedPets.map((name, idx) => (
-                <div
+                <motion.div
                   key={idx}
-                  className="hand-drawn px-5 py-3 bg-card"
+                  initial={{ scale: 0, rotate: -10 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="input-minimal px-6 py-4"
                 >
-                  <span className="font-medium">{name}</span>
-                </div>
+                  <span className="font-medium text-base">{name}</span>
+                </motion.div>
               ))
             ) : (
-              <p className="text-foreground/40">暂时没有心动的萌宠...</p>
+              <p className="text-foreground/40 text-sm">暂时没有心动的萌宠...</p>
             )}
           </div>
 
-          <Button
+          <button
             onClick={handleReset}
-            className="btn-hand-drawn w-full h-14 text-base"
+            className="btn-minimal w-full py-5 text-base tracking-wide"
           >
-            <RefreshCw className="mr-2 w-5 h-5" strokeWidth={2} />
             重新测试
-          </Button>
+          </button>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background p-6 flex flex-col">
+    <div className="min-h-screen bg-background p-4 flex flex-col relative">
+      <MinimalBackground />
+
       {/* 极简顶部 - 大量留白 */}
-      <div className="w-full max-w-md mx-auto pt-8 pb-6 text-center">
-        <p className="text-sm font-medium text-foreground/60">
+      <div className="w-full max-w-md mx-auto pt-6 pb-4 text-center relative z-10">
+        <p className="label-minimal text-xs">
           {currentIdx + 1} / {pets.length}
         </p>
       </div>
 
-      {/* 卡片区域 - 手绘边框风格 */}
-      <div className="flex-1 flex items-center justify-center py-8">
-        <div className="relative w-full max-w-md aspect-[3/4]">
+      {/* 卡片区域 - 极简手绘风格 */}
+      <div className="flex-1 flex items-center justify-center py-6">
+        <div className="relative w-full max-w-md aspect-[3/4.2]">
           <AnimatePresence>
             {currentIdx < pets.length && (
               <motion.div
@@ -134,37 +139,44 @@ const Recommendation: React.FC = () => {
                   else if (info.offset.x < -100) handleSwipe('left');
                 }}
               >
-                {/* 手绘卡片风格 */}
-                <div className="hand-drawn w-full h-full overflow-hidden bg-card">
-                  <div className="h-[60%] w-full relative">
+                {/* 极简手绘卡片 */}
+                <div className="w-full h-full overflow-hidden bg-card relative" style={{
+                  border: '4px solid hsl(var(--foreground))',
+                  borderRadius: '8px 6px 7px 5px',
+                  background: 'hsl(var(--card))'
+                }}>
+                  <div className="h-[55%] w-full relative">
                     <img
                       src={currentPet.image}
                       alt={currentPet.name}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
-                    {/* 手绘风格反馈标记 */}
+                    {/* 极简反馈标记 */}
                     <motion.div
                       style={{ opacity: opacityRight }}
-                      className="absolute top-8 left-8 border-3 border-primary bg-white/90 text-primary px-4 py-2 rounded-lg font-bold text-xl rotate-[-12deg] shadow-lg"
+                      className="absolute top-6 left-6 input-minimal bg-white/95 text-foreground px-4 py-2 font-bold text-lg shadow-lg"
+                      style={{ rotate: '-8deg' }}
                     >
-                      喜欢
+                      ◆ 喜欢
                     </motion.div>
                     <motion.div
                       style={{ opacity: opacityLeft }}
-                      className="absolute top-8 right-8 border-3 border-foreground/60 bg-white/90 text-foreground/60 px-4 py-2 rounded-lg font-bold text-xl rotate-[12deg] shadow-lg"
+                      className="absolute top-6 right-6 input-minimal bg-white/95 text-foreground/60 px-4 py-2 font-bold text-lg shadow-lg"
+                      style={{ rotate: '8deg' }}
                     >
-                      划走
+                      划走 ◆
                     </motion.div>
 
-                    <div className="absolute bottom-6 left-6 right-6 text-white">
-                      <h3 className="text-3xl font-bold mb-2">{currentPet.name}</h3>
+                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                      <h3 className="heading-minimal text-3xl mb-2">{currentPet.name}</h3>
                       <div className="flex flex-wrap gap-2">
                         {currentPet.traits.map((trait: string, idx: number) => (
                           <span
                             key={idx}
-                            className="text-sm bg-white/20 backdrop-blur-sm px-3 py-1 rounded-md"
+                            className="text-xs px-3 py-1 bg-white/25 backdrop-blur-sm"
+                            style={{ borderRadius: '4px' }}
                           >
                             {trait}
                           </span>
@@ -172,12 +184,12 @@ const Recommendation: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="h-[40%] p-6 flex flex-col justify-center text-center">
-                    <p className="text-base leading-relaxed mb-4">
+                  <div className="h-[45%] p-6 flex flex-col justify-center text-center">
+                    <p className="text-sm leading-relaxed mb-4 text-foreground/80">
                       {currentPet.description}
                     </p>
-                    <p className="text-sm text-foreground/50">
-                      星座契合度 ★★★★☆
+                    <p className="label-minimal text-xs text-[hsl(var(--gold)_/_0.6)]">
+                      星座契合度 ◆◆◆◆◆
                     </p>
                   </div>
                 </div>
@@ -188,19 +200,27 @@ const Recommendation: React.FC = () => {
       </div>
 
       {/* 极简按钮 - 手绘风格 */}
-      <div className="w-full max-w-md flex justify-center gap-6 pb-8">
+      <div className="w-full max-w-md flex justify-center gap-8 pb-8 relative z-10">
         <button
           onClick={() => handleSwipe('left')}
-          className="hand-drawn w-16 h-16 flex items-center justify-center bg-card hover:bg-foreground/5 transition-colors"
+          className="input-minimal w-24 h-24 flex items-center justify-center bg-card hover:bg-foreground/5 transition-all"
         >
-          <X className="w-8 h-8" strokeWidth={2.5} />
+          <svg className="w-12 h-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
         </button>
         <button
           onClick={() => handleSwipe('right')}
-          className="hand-drawn w-20 h-20 flex items-center justify-center bg-primary hover:bg-primary/90 transition-colors"
-          style={{ background: 'hsl(var(--primary))' }}
+          className="input-minimal w-24 h-24 flex items-center justify-center transition-all hover:scale-105"
+          style={{
+            background: 'hsl(var(--foreground))',
+            borderColor: 'hsl(var(--foreground))'
+          }}
         >
-          <Heart className="w-10 h-10 fill-white text-white" strokeWidth={0} />
+          <svg className="w-12 h-12 text-background" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
         </button>
       </div>
     </div>
